@@ -1,0 +1,11 @@
+{
+  "extends": ["airbnb-base", "plugin:node/recommended", "plugin:security/recommended"],
+  "plugins": ["node", "security"],
+  "rules": {
+    "no-console": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/*.test.js"] }
+    ]
+  }
+}
