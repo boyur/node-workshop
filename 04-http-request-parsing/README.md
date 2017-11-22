@@ -34,3 +34,9 @@ Content-Length: 14
   "sum": 3
 }
 ```
+
+## Testing
+
+```shell
+npm test
+```

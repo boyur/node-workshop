@@ -1,89 +1,112 @@
-const test = require('tape');
 const request = require('supertest');
 const app = require('./app');
 
-test('GET /sum', (t) => {
-  t.plan(7);
+describe('GET /sum', () => {
+  test('adds 1 + 2 to equal 3', (done) => {
+    request(app)
+      .get('/sum?a=1&b=2')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+      .end((error, response) => {
+        expect(error).toBeFalsy();
+        const body = JSON.parse(response.text);
+        expect(body).toEqual({ sum: 3 });
+        done();
+      });
+  });
 
-  request(app)
-    .get('/sum?a=1&b=2')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-    .end((error, response) => {
-      t.error(error);
-      const body = JSON.parse(response.text);
-      t.deepEqual(body, { sum: 3 });
-    });
+  test('adds 0 + 42 to equal 42', (done) => {
+    request(app)
+      .get('/sum?a=0&b=42')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+      .end((error, response) => {
+        expect(error).toBeFalsy();
+        const body = JSON.parse(response.text);
+        expect(body).toEqual({ sum: 42 });
+        done();
+      });
+  });
 
-  request(app)
-    .get('/sum?a=0&b=42')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-    .end((error, response) => {
-      t.error(error);
-      const body = JSON.parse(response.text);
-      t.deepEqual(body, { sum: 42 });
-    });
+  test('adds 10 + (-20) to equal -10', (done) => {
+    request(app)
+      .get('/sum?a=10&b=-20')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+      .end((error, response) => {
+        expect(error).toBeFalsy();
+        const body = JSON.parse(response.text);
+        expect(body).toEqual({ sum: -10 });
+        done();
+      });
+  });
 
-  request(app)
-    .get('/sum?a=10&b=-20')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-    .end((error, response) => {
-      t.error(error);
-      const body = JSON.parse(response.text);
-      t.deepEqual(body, { sum: -10 });
-    });
-
-  request(app)
-    .get('/sum?a=42')
-    .expect(400)
-    .end((error) => {
-      t.error(error);
-    });
+  test('400 Bad Request on invalid syntax', (done) => {
+    request(app)
+      .get('/sum?a=42')
+      .expect(400)
+      .expect('Content-Type', /text\/plain/)
+      .end((error, response) => {
+        expect(error).toBeFalsy();
+        expect(response.text).toEqual(expect.stringMatching(/Bad Request/));
+        done();
+      });
+  });
 });
 
-test('POST /sum', (t) => {
-  t.plan(7);
+describe('POST /sum', () => {
+  test('adds 1 + 2 to equal 3', (done) => {
+    request(app)
+      .post('/sum')
+      .send({ a: 1, b: 2 })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+      .end((error, response) => {
+        expect(error).toBeFalsy();
+        const body = JSON.parse(response.text);
+        expect(body).toEqual({ sum: 3 });
+        done();
+      });
+  });
 
-  request(app)
-    .post('/sum')
-    .send({ a: 1, b: 2 })
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-    .end((error, response) => {
-      t.error(error);
-      const body = JSON.parse(response.text);
-      t.deepEqual(body, { sum: 3 });
-    });
+  test('adds 0 + 42 to equal 42', (done) => {
+    request(app)
+      .post('/sum')
+      .send({ a: 0, b: 42 })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+      .end((error, response) => {
+        expect(error).toBeFalsy();
+        const body = JSON.parse(response.text);
+        expect(body).toEqual({ sum: 42 });
+        done();
+      });
+  });
 
-  request(app)
-    .post('/sum')
-    .send({ a: 0, b: 42 })
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-    .end((error, response) => {
-      t.error(error);
-      const body = JSON.parse(response.text);
-      t.deepEqual(body, { sum: 42 });
-    });
+  test('adds 10 + (-20) to equal -10', (done) => {
+    request(app)
+      .post('/sum')
+      .send({ a: 10, b: -20 })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+      .end((error, response) => {
+        expect(error).toBeFalsy();
+        const body = JSON.parse(response.text);
+        expect(body).toEqual({ sum: -10 });
+        done();
+      });
+  });
 
-  request(app)
-    .post('/sum')
-    .send({ a: 10, b: -20 })
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-    .end((error, response) => {
-      t.error(error);
-      const body = JSON.parse(response.text);
-      t.deepEqual(body, { sum: -10 });
-    });
-
-  request(app)
-    .post('/sum')
-    .send({ a: 42 })
-    .expect(400)
-    .end((error) => {
-      t.error(error);
-    });
+  test('400 Bad Request on invalid syntax', (done) => {
+    request(app)
+      .post('/sum')
+      .send({ a: 42 })
+      .expect(400)
+      .expect('Content-Type', /text\/plain/)
+      .end((error, response) => {
+        expect(error).toBeFalsy();
+        expect(response.text).toEqual(expect.stringMatching(/Bad Request/));
+        done();
+      });
+  });
 });

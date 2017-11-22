@@ -21,8 +21,9 @@ const app = (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(result, null, 2), 'utf8');
     } else {
+      res.setHeader('Content-Type', 'text/plain');
       res.writeHead(400);
-      res.end();
+      res.end('Bad Request');
     }
   } else if (req.method === 'POST') {
     let body = '';
@@ -37,8 +38,9 @@ const app = (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(result, null, 2), 'utf8');
       } else {
+        res.setHeader('Content-Type', 'text/plain');
         res.writeHead(400);
-        res.end();
+        res.end('Bad Request');
       }
     });
   }

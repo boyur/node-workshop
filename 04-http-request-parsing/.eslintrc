@@ -1,6 +1,10 @@
 {
   "extends": ["airbnb-base", "plugin:node/recommended", "plugin:security/recommended"],
   "plugins": ["node", "security"],
+  "env": {
+    "node": true,
+    "jest": true
+  },
   "rules": {
     "no-console": "off",
     "import/no-extraneous-dependencies": [
